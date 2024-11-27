@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mailing</title>
+</head>
+<body>
+{% load my_tags %}
+<div class="create button">
+    <a class="btn btn-primary" href="{% url 'mailings:index' %}" role="button">Главная</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:mailings_list' %}" role="button">Рассылки</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:clients_list' %}" role="button">Клиенты</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:messages_list' %}" role="button">Сообщения рассылок</a>
+    {% if request.user|has_group:"manager" %}
+    |
+    <a class="btn btn-primary" href="{% url 'users:list' %}" role="button">Пользователи сервиса</a>
+    {% endif %}
+
+    <form method="post" action="{% url 'users:users_logout' %}">
+        {% csrf_token %}
+        <button type="submit">Выйти</button>
+    </form>
+</div>
+
+<div class="mailing_block">
+    <div>status: {{ object.status }}</div>
+    <div>create date: {{ object.start_date_and_time }}</div>
+    <div>delay: {{ object.delay }}</div>
+    <div>message title: {{ object.message.title }}</div>
+    <div>message text: {{ object.message.body }}</div>
+    <div class="btn-group">
+        <a class="btn btn-primary" href="{% url 'mailings:mailings_update' object.pk %}" role="button">Изменить</a>
+        <a class="btn btn-primary" href="{% url 'mailings:mailings_delete' object.pk %}" role="button">Удалить</a>
+    </div>
+    <div>--------------</div>
+</div>
+
+<div class="mailing_logs">
+    <div>Try history:</div>
+    <div></div>
+    {% for log in logs %}
+        <div>date and time: {{ log.date_and_time }}</div>
+        <div>status: {{ log.status }}</div>
+        <div>response: {{ log.response }}</div>
+        <div>-----------------</div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mailing</title>
+</head>
+<body>
+{% load my_tags %}
+<div class="create button">
+    <a class="btn btn-primary" href="{% url 'mailings:index' %}" role="button">Главная</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:mailings_list' %}" role="button">Рассылки</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:clients_list' %}" role="button">Клиенты</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:messages_list' %}" role="button">Сообщения рассылок</a>
+    {% if request.user|has_group:"manager" %}
+    |
+    <a class="btn btn-primary" href="{% url 'users:list' %}" role="button">Пользователи сервиса</a>
+    {% endif %}
+
+    <form method="post" action="{% url 'users:users_logout' %}">
+        {% csrf_token %}
+        <button type="submit">Выйти</button>
+    </form>
+</div>
+<a class="btn btn-primary" href="{% url 'mailings:mailings_create' %}" role="button">Создать рассылку</a>
+<div>_____________________</div>
+{% for mailing in object_list %}
+<div class="mailing_block">
+    <a href="{% url 'mailings:mailings_detail' mailing.pk %}">{{ mailing.message.title }}</a>
+    {% if request.user|has_group:"manager" %}
+    <div>mailing owner: {{ mailing.owner }}</div>
+    {% endif %}
+    <div>status: {{ mailing.status }}</div>
+    <div class="btn-group">
+        {% if mailing.status == 'started' %}
+            <a class="btn btn-primary" href="{% url 'mailings:mailings_stop' mailing.pk %}" role="button" style="color:red;">Остановить</a>
+        {% else %}
+            <a class="btn btn-primary" href="{% url 'mailings:mailings_start' mailing.pk %}" role="button" style="color:green;">Запустить</a>
+        {% endif %}
+    </div>
+    <div>--------------</div>
+</div>
+{% endfor %}
+
+</body>
+</html>

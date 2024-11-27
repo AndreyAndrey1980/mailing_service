@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Messages</title>
+</head>
+<body>
+{% load my_tags %}
+<div class="create button">
+    <a class="btn btn-primary" href="{% url 'mailings:index' %}" role="button">Главная</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:mailings_list' %}" role="button">Рассылки</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:clients_list' %}" role="button">Клиенты</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:messages_list' %}" role="button">Сообщения рассылок</a>
+    {% if request.user|has_group:"manager" %}
+    |
+    <a class="btn btn-primary" href="{% url 'users:list' %}" role="button">Пользователи сервиса</a>
+    {% endif %}
+
+    <form method="post" action="{% url 'users:users_logout' %}">
+        {% csrf_token %}
+        <button type="submit">Выйти</button>
+    </form>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <form class="row" method="post" enctype="multipart/form-data">
+                {{ object.name }}
+                <div class="card">
+                    <div class="card-body">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                    </div>
+                    <button type="submit" class="btn">
+                        Удалить
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

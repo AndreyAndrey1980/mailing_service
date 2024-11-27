@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+</head>
+<body>
+{% load my_tags %}
+<div class="create button">
+    <a class="btn btn-primary" href="{% url 'mailings:index' %}" role="button">Главная</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:mailings_list' %}" role="button">Рассылки</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:clients_list' %}" role="button">Клиенты</a>
+    |
+    <a class="btn btn-primary" href="{% url 'mailings:messages_list' %}" role="button">Сообщения рассылок</a>
+    {% if request.user|has_group:"manager" %}
+    |
+    <a class="btn btn-primary" href="{% url 'users:list' %}" role="button">Пользователи сервиса</a>
+    {% endif %}
+
+    <form method="post" action="{% url 'users:users_logout' %}">
+        {% csrf_token %}
+        <button type="submit">Выйти</button>
+    </form>
+</div>
+
+{% for user in object_list %}
+<div class="user_block">
+    <div>{{ user.email }}</div>
+    <div>{{ user.date_joined }}</div>
+    <div class="btn-group">
+        {% if user.is_active %}
+        <a class="btn btn-primary" href="{% url 'users:block' user.pk %}" role="button">Заблокировать</a>
+        {% else %}
+        <a class="btn btn-primary" href="{% url 'users:unblock' user.pk %}" role="button">Разблокировать</a>
+        {% endif %}
+    </div>
+    <div>--------------</div>
+</div>
+{% endfor %}
+
+</body>
+</html>
