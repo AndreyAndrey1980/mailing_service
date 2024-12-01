@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>Mailing</title>
 </head>
 <body>
 {% load my_tags %}
@@ -14,7 +14,7 @@
     <a class="btn btn-primary" href="{% url 'mailings:clients_list' %}" role="button">Клиенты</a>
     |
     <a class="btn btn-primary" href="{% url 'mailings:messages_list' %}" role="button">Сообщения рассылок</a>
-    |
+        |
     <a class="btn btn-primary" href="{% url 'mailings:mailings_trying' %}" role="button">Попытки рассылок</a>
     {% if request.user|has_group:"manager" %}
     |
@@ -26,21 +26,18 @@
         <button type="submit">Выйти</button>
     </form>
 </div>
-<div>Всего рассылок: {{ mailing_count }}</div>
-_____________________________________________________________
-<div>Активных рассылок: {{ active_mailing_count }}</div>
-_____________________________________________________________
-<div>Всего ваших клиентов: {{ client_count }}</div>
-_____________________________________________________________
-{% for blog in blogs %}
-<div class="blogs_block">
-    <a href="{% url 'blogs:detail' blog.pk %}">{{ blog.title }}</a>
-    <div>
-        <img class="card-img-top" src="/blogs/media/{{ blog.image }}" width="250" height="250">
-    </div>
-    <div>create date: {{ blog.create_date }}</div>
-    <div>views: {{ blog.view_count }}</div>
-    <div>--------------</div>
+<a class="btn btn-primary" href="{% url 'mailings:mailings_create' %}" role="button">Создать рассылку</a>
+<div>_____________________</div>
+{% for try in object_list %}
+<div class="try_block">
+    <a href="{% url 'mailings:mailings_detail' try.mailing.pk %}">{{ try.mailing.message.title }}</a>
+    {% if request.user|has_group:"manager" %}
+    <div>mailing owner: {{ try.mailing.owner }}</div>
+    {% endif %}
+    <div>date and time: {{ try.date_and_time }}</div>
+    <div>status: {{ try.status }}</div>
+    <div>response: {{ try.response }}</div>
+    <div>-----------------</div>
 </div>
 {% endfor %}
 

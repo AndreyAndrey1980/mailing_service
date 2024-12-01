@@ -1,5 +1,4 @@
 from django.core.management import BaseCommand
-import json
 from django.contrib.auth.models import Group, Permission
 
 

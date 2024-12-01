@@ -1,6 +1,5 @@
 from django.db import models
 from datetime import datetime
-from django.utils.translation import gettext_lazy as _
 
 
 class Client(models.Model):

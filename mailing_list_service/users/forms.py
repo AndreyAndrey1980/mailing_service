@@ -4,7 +4,6 @@ from .models import User
 from django.core.exceptions import ObjectDoesNotExist
 
 
-
 def check_email_exist(email):
     try:
         User.objects.get(email=email)

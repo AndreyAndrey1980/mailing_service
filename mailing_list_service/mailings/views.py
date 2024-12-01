@@ -1,5 +1,3 @@
-import datetime
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from blogs.models import Blog
@@ -10,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.conf import settings
 from django.core.cache import cache
-from .forms import MailingForm, ClientForm, DeleteForm, MessageForm, ReportForm
+from .forms import MailingForm, ClientForm, DeleteForm, MessageForm
 from django.core.exceptions import PermissionDenied
 from .scheduled import start_mailing as schedule_start_mailing, stop_mailing as schedule_stop_mailing
 
@@ -20,7 +18,6 @@ def start_mailing(request, pk):
     mailing = Mailing.objects.get(pk=pk)
     if request.user.email != mailing.owner:
         raise PermissionDenied
-    time_now = datetime.datetime.now()
     schedule_start_mailing(mailing)
     mailing.status = Mailing.Status.STARTED
     mailing.save()
@@ -44,7 +41,7 @@ def index(request):
     if settings.CACHE_ENABLED:
         # Проверяем включенность кеша
         key = 'blogs'  # Создаем ключ для хранения
-        blogs_list = cache.get(key)# Пытаемся получить данные
+        blogs_list = cache.get(key)  # Пытаемся получить данные
         if blogs_list is None:
             # Если данные не были получены из кеша, то выбираем из БД и записываем в кеш
             blogs_list = list(Blog.objects.all())
@@ -133,7 +130,7 @@ class MailingUpdateView(LoginRequiredMixin, UpdateView):
     login_url = '/users/login'
     redirect_field_name = 'redirect_to'
     model = Mailing
-    form_class= MailingForm
+    form_class = MailingForm
     success_url = reverse_lazy('mailings:mailings_list')
 
     def get_form_class(self):
@@ -272,3 +269,14 @@ class MessageUpdateView(LoginRequiredMixin, UpdateView):
             return MessageForm
         else:
             raise PermissionDenied
+
+
+class TryingListView(LoginRequiredMixin, ListView):
+    login_url = '/users/login'
+    model = MailingTry
+
+    def get_queryset(self):
+        if self.request.user.groups.filter(name="manager").exists():
+            return self.model.objects.all()
+        else:
+            return self.model.objects.filter(mailing__owner=self.request.user.email)

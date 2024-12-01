@@ -14,6 +14,8 @@
     <a class="btn btn-primary" href="{% url 'mailings:clients_list' %}" role="button">Клиенты</a>
     |
     <a class="btn btn-primary" href="{% url 'mailings:messages_list' %}" role="button">Сообщения рассылок</a>
+        |
+    <a class="btn btn-primary" href="{% url 'mailings:mailings_trying' %}" role="button">Попытки рассылок</a>
     {% if request.user|has_group:"manager" %}
     |
     <a class="btn btn-primary" href="{% url 'users:list' %}" role="button">Пользователи сервиса</a>
@@ -36,17 +38,6 @@
         <a class="btn btn-primary" href="{% url 'mailings:mailings_delete' object.pk %}" role="button">Удалить</a>
     </div>
     <div>--------------</div>
-</div>
-
-<div class="mailing_logs">
-    <div>Try history:</div>
-    <div></div>
-    {% for log in logs %}
-        <div>date and time: {{ log.date_and_time }}</div>
-        <div>status: {{ log.status }}</div>
-        <div>response: {{ log.response }}</div>
-        <div>-----------------</div>
-    {% endfor %}
 </div>
 
 </body>

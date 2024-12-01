@@ -38,10 +38,10 @@ def start_mailing(mailing):
                 from_email=SendMailing.from_email,
                 recipient_list=SendMailing.recipient_list)
             status = MailingTry.Status.OK if response else MailingTry.Status.ERROR
-            mailing_try = MailingTry.objects.create(mailing=mailing, status=status, date_and_time=datetime.datetime.now())
+            MailingTry.objects.create(mailing=mailing, status=status, date_and_time=datetime.datetime.now())
 
     job = scheduler.add_job(
-        SendMailing.send_mailing, 'interval', hours=0, minutes=1, seconds=0, )
+        SendMailing.send_mailing, 'interval', hours=delay_hours, minutes=0, seconds=0, )
     mailing_jobs[mailing.id] = job
 
 

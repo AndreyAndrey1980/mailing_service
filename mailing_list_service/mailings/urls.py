@@ -26,7 +26,9 @@ urlpatterns = [
     path("messages/<int:pk>/update", views.MessageUpdateView.as_view(), name="messages_update"),
 
     path("mailings/<int:pk>/start", views.start_mailing, name="mailings_start"),
-    path("mailings/<int:pk>/stop", views.stop_mailing, name="mailings_stop")
+    path("mailings/<int:pk>/stop", views.stop_mailing, name="mailings_stop"),
+
+    path("mailings/trying", views.TryingListView.as_view(), name="mailings_trying")
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
