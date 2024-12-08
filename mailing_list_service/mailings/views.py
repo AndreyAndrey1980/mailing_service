@@ -29,7 +29,10 @@ def stop_mailing(request, pk):
     mailing = Mailing.objects.get(pk=pk)
     if request.user.email != mailing.owner and not request.user.groups.filter(name="manager").exists():
         raise PermissionDenied
-    schedule_stop_mailing(mailing)
+    try:
+        schedule_stop_mailing(mailing)
+    except Exception:
+        pass
     mailing.status = Mailing.Status.FINISHED
     mailing.save()
     return redirect("mailings:mailings_list")

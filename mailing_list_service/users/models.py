@@ -4,7 +4,7 @@ from django.db import models
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(verbose_name='почта', unique=True)
+    email = models.EmailField(verbose_name='mail', unique=True)
     token = models.CharField(max_length=100, verbose_name="Token", blank=True, null=True)
 
     USERNAME_FIELD = 'email'
@@ -14,3 +14,4 @@ class User(AbstractUser):
         permissions = [
             ("manager_permissions", "See all users and mailing, can block user, can stop mailing"),
         ]
+
